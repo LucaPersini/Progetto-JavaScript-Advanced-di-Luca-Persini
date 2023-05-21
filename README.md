@@ -4,7 +4,7 @@
 
 ## Descrizione
 
-Il progetto consiste in una web app che permette di visualizzare le ultime news in ambito tech attraverso l'utilizzo del servizio HAck News. Le informazioni visualizzate sono il titolo dell'articolo,
+Il progetto consiste in una web app che permette di visualizzare le ultime news in ambito tech attraverso l'utilizzo del servizio Hack News. Le informazioni visualizzate sono il titolo dell'articolo,
 l'autore, la data di pubblicazione e il link per visualizzare l'articolo nella sua interezza.
 
 ## Sviluppo

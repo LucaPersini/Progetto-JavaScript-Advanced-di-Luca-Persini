@@ -1,6 +1,6 @@
 # Progetto-JavaScript-Advanced-di-Luca-Persini
 
-[Il mio progetto per il corso JavaScript Advanced]([https://6469edcf5a3234516e2ea4da--tiny-llama-b09036.netlify.app/](https://tiny-llama-b09036.netlify.app/))
+[Il mio progetto per il corso JavaScript Advanced]([https://6469edcf5a3234516e2ea4da--tiny-llama-b09036.netlify.app/](https://tiny-llama-b09036.netlify.app/])
 
 ## Descrizione
 

@@ -20,6 +20,7 @@ function getArray() {
 
 let container = document.querySelector(".content")
 let loadMoreButton = document.querySelector(".loadMore_button")
+let loader = document.querySelector(".loader")
 
 let initialItems = 10
 
@@ -49,21 +50,34 @@ function getArticle(id) {
         console.log('Error', err.message)
       }
     })
+    .finally(() => {
+      loader.classList.add("hidden")
+    })
 }
 
 async function loadInitialItems() {
-  let ID = await getArray()
   let out = ""
   let counter = 0
-  for(id of ID) {
+
+  let ID = await getArray()
+  let promises = []
+
+  for(let i = 0; i < initialItems; i++) {
+    let id = ID[i]
+    let article = getArticle(id)
+    promises.push(article)
+  }
+
+  promises = await Promise.all(promises)
+  
+  for(let promise of promises) {
     if(counter < initialItems) {
-      let article = await getArticle(id)
       out += `
         <div class="article">
           <div>
-            <p>Published by <strong class="author">${article[1]}</strong> &#183 <span class="date">${article[3]}</span></p>
-            <h2 class="article_title">${article[0]}</h2>
-            <a href="${article[2]}" class="visitButton" target="_blank">Visit</a>
+            <p>Published by <strong class="author">${promise[1]}</strong> &#183 <span class="date">${promise[3]}</span></p>
+            <h2 class="article_title">${promise[0]}</h2>
+            <a href="${promise[2]}" class="visitButton" target="_blank" rel="noopener">Visit</a>
           </div>
         </div>
       `
@@ -74,24 +88,35 @@ async function loadInitialItems() {
   let div = document.createElement("div")
   container.insertBefore(div, loadMoreButton)
   div.innerHTML = out 
+  loadMoreButton.classList.remove("hidden")
 }
 
 loadInitialItems()
 
 async function loadData() {
   let ID = await getArray()
+  let promises = []
+
   let currentDisplayItems = document.querySelectorAll(".article").length
   let out = ""
   let counter = 0
 
-  for(id of ID) {
-    if(counter >= currentDisplayItems && counter < loadItems + currentDisplayItems) {
-      let article = await getArticle(id)
-      out += `
+  for(let i = currentDisplayItems; i < currentDisplayItems + loadItems; i++) {
+    let id = ID[i]
+    let article = getArticle(id)
+    promises.push(article)
+  }
+  promises = await Promise.all(promises)
+
+  for(let promise of promises) {
+    if(counter < loadItems + currentDisplayItems) {   
+       out += `
         <div class="article">
-          <p>Published by <span class="author">${article[1]}</span> &#183 <span class="date">${article[3]}</span></p>
-          <h2 class="article_title">${article[0]}</h2>
-          <a href="${article[2]}" class="visitButton" target="_blank">Visit</a>
+          <div>
+            <p>Published by <strong class="author">${promise[1]}</strong> &#183 <span class="date">${promise[3]}</span></p>
+            <h2 class="article_title">${promise[0]}</h2>
+            <a href="${promise[2]}" class="visitButton" target="_blank" rel="noopener">Visit</a>
+          </div>
         </div>
       `
     }
@@ -100,13 +125,10 @@ async function loadData() {
   let div = document.createElement("div")
   container.insertBefore(div, loadMoreButton)
   div.innerHTML = out
-  div.style.opacity = 0
 
   if(document.querySelectorAll(".article").length == ID.length) {
     loadMoreButton.style.display = "none"
   }
-
-  fadeIn(div)
 }
 
 loadMoreButton.addEventListener('click', () => {

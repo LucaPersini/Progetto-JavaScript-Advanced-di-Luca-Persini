@@ -10,7 +10,8 @@ $text-font: 'Roboto', sans-serif;
 
 header {
   width: 100%;
-  position: -webkit-sticky; /* Safari */
+  position: -webkit-sticky;
+  /* Safari */
   position: sticky;
   top: 0;
   margin-inline: auto;
@@ -37,6 +38,42 @@ body {
   display: flex;
   align-items: left;
   flex-direction: column;
+
+  .loader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .hidden {
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  .loader::after {
+    content: "";
+    height: 60px;
+    width: 60px;
+    border: 10px solid #dddddd;
+    border-top-color: black;
+    border-radius: 50%;
+    animation: loading 0.75s ease infinite;
+  }
+
+  @keyframes loading {
+    from {
+      transform: rotate(0turn);
+    }
+
+    to {
+      transform: rotate(1turn);
+    }
+  }
 
   .article {
     padding: 1.5rem;

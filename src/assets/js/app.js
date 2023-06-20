@@ -65,13 +65,10 @@ async function loadInitialItems() {
   let ID = await getArray()
   let promises = []
 
-  for (let i = 0; i < initialItems; i++) {
-    let id = ID[i]
-    let article = getArticle(id)
-    promises.push(article)
-  }
+  const ids = Array.from({ length: initialItems }, (_, i) => ID[i]);
+  const allFetches = ids.map(id => getArticle(id));
 
-  promises = await Promise.all(promises)
+  promises = await Promise.all(allFetches)
 
   for (let promise of promises) {
     if (counter < initialItems) {
@@ -105,12 +102,10 @@ async function loadData() {
   let out = ""
   let counter = 0
 
-  for (let i = currentDisplayItems; i < currentDisplayItems + loadItems; i++) {
-    let id = ID[i]
-    let article = getArticle(id)
-    promises.push(article)
-  }
-  promises = await Promise.all(promises)
+  const ids = Array.from({ length: loadItems }, (_, i) => ID[i]);
+  const allFetches = ids.map(id => getArticle(id));
+
+  promises = await Promise.all(allFetches)
 
   for (let promise of promises) {
     if (counter < loadItems + currentDisplayItems) {

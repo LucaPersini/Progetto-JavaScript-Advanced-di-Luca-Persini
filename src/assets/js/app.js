@@ -4,12 +4,12 @@ function getArray() {
       return response.data
     })
     .catch(err => {
-      if(err.response) {
+      if (err.response) {
         console.log(err.response.data)
         console.log(err.response.status)
         console.log(err.response.headers)
       }
-      if(err.request) {
+      if (err.request) {
         console.log(err.request)
       }
       else {
@@ -17,6 +17,9 @@ function getArray() {
       }
     })
 }
+
+let header = document.querySelector(".header")
+fadeIn(header)
 
 let container = document.querySelector(".content")
 let loadMoreButton = document.querySelector(".loadMore_button")
@@ -31,19 +34,19 @@ function getArticle(id) {
     .then(response => {
       let date = new Date(response.data.time * 1000)
       return [
-        response.data.title, 
-        response.data.by, 
-        response.data.url, 
+        response.data.title,
+        response.data.by,
+        response.data.url,
         date.toLocaleDateString("default")
       ]
     })
     .catch(err => {
-      if(err.response) {
+      if (err.response) {
         console.log(err.response.data)
         console.log(err.response.status)
         console.log(err.response.headers)
       }
-      if(err.request) {
+      if (err.request) {
         console.log(err.request)
       }
       else {
@@ -62,16 +65,16 @@ async function loadInitialItems() {
   let ID = await getArray()
   let promises = []
 
-  for(let i = 0; i < initialItems; i++) {
+  for (let i = 0; i < initialItems; i++) {
     let id = ID[i]
     let article = getArticle(id)
     promises.push(article)
   }
 
   promises = await Promise.all(promises)
-  
-  for(let promise of promises) {
-    if(counter < initialItems) {
+
+  for (let promise of promises) {
+    if (counter < initialItems) {
       out += `
         <div class="article">
           <div>
@@ -87,7 +90,8 @@ async function loadInitialItems() {
 
   let div = document.createElement("div")
   container.insertBefore(div, loadMoreButton)
-  div.innerHTML = out 
+  div.innerHTML = out
+  fadeIn(div)
   loadMoreButton.classList.remove("hidden")
 }
 
@@ -101,16 +105,16 @@ async function loadData() {
   let out = ""
   let counter = 0
 
-  for(let i = currentDisplayItems; i < currentDisplayItems + loadItems; i++) {
+  for (let i = currentDisplayItems; i < currentDisplayItems + loadItems; i++) {
     let id = ID[i]
     let article = getArticle(id)
     promises.push(article)
   }
   promises = await Promise.all(promises)
 
-  for(let promise of promises) {
-    if(counter < loadItems + currentDisplayItems) {   
-       out += `
+  for (let promise of promises) {
+    if (counter < loadItems + currentDisplayItems) {
+      out += `
         <div class="article">
           <div>
             <p>Published by <strong class="author">${promise[1]}</strong> &#183 <span class="date">${promise[3]}</span></p>
@@ -120,13 +124,14 @@ async function loadData() {
         </div>
       `
     }
-    counter ++
+    counter++
   }
   let div = document.createElement("div")
   container.insertBefore(div, loadMoreButton)
   div.innerHTML = out
+  fadeIn(div)
 
-  if(document.querySelectorAll(".article").length == ID.length) {
+  if (document.querySelectorAll(".article").length == ID.length) {
     loadMoreButton.style.display = "none"
   }
 }
@@ -135,24 +140,24 @@ loadMoreButton.addEventListener('click', () => {
   loadData()
 })
 
-function fadeIn(div) {
-  let opacity = 0 
-  let interval = setInterval(function() {
-    if(opacity <= 1) {
-      opacity += 0.1
-      div.style.opacity = opacity
-    }
-    else {
-      clearInterval(interval)
-    }
-  }, 30)
+function fadeIn(element) {
+  const fadeInValue = [
+    { opacity: 0 },
+    { opacity: 10 }
+  ]
+
+  const fadeInTimer = {
+    duration: 300
+  }
+
+  element.animate(fadeInValue, fadeInTimer)
 }
 
 window.addEventListener("scroll", () => {
   let header = document.querySelector(".header")
   let scrollPosition = window.scrollY
 
-  if(scrollPosition > 0) {
+  if (scrollPosition > 0) {
     header.classList.add("shadow-header")
   }
   else {
